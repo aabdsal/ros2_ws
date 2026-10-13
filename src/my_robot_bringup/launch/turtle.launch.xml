@@ -1,0 +1,27 @@
+
+<launch>
+    <node pkg="turtlesim" exec="turtlesim_node" name="turtle1" namespace="/t1">
+        <param from="$(find-pkg-share my_robot_bringup)/config/turtle_params.yaml"/>
+    </node>
+    
+    <node pkg="turtlesim" exec="turtlesim_node" name="turtle2" namespace="/t2">
+        <param from="$(find-pkg-share my_robot_bringup)/config/turtle_params.yaml"/>
+    </node>
+    
+    <node pkg="turtle_controller_cpp" exec="turtle_controller" 
+    name="turtle1_controller" namespace="/t1">
+        <param from="$(find-pkg-share my_robot_bringup)/config/turtle_params.yaml"/>
+    </node>
+    
+    <node pkg="turtle_controller_cpp" exec="turtle_controller" 
+    name="turtle2_controller" namespace="/t2">
+        <param from="$(find-pkg-share my_robot_bringup)/config/turtle_params.yaml"/>
+    </node>
+</launch>
+
+<!-- 
+You can write a launch le in Python, XML, or YAML. Here, you discovered the Python and XML
+syntax and saw that XML is probably the best choice by default. e syntax is much easier, and the
+code is much shorter. If you ever need to combine XML and Python launch les, you can do so by
+including a launch le in another one
+-->

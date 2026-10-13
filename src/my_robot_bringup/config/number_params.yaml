@@ -1,0 +1,14 @@
+/number_publisher:
+    ros__parameters:
+       number: 7
+       period_timer: 0.8
+
+/abc/num_pub1:
+   ros__parameters:
+       number: 3
+       period_timer: 3.0
+
+/abc/num_pub2:
+   ros__parameters:
+       number: 10 
+       period_timer: 2.0 

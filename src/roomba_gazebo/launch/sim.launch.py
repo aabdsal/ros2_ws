@@ -83,7 +83,7 @@ def generate_launch_description():
     controller_spawner = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['joint_state_broadcaster', 'diff_drive_controller', 'side_brush_controller', '--param-file', controllers_yaml],  # <- aquí
+        arguments=['joint_state_broadcaster', 'diff_drive_controller',],  # <- aquí
         output='screen')
 
     start_controllers = RegisterEventHandler(
@@ -101,7 +101,8 @@ def generate_launch_description():
         executable='rviz2',
         arguments=['-d', PathJoinSubstitution([pkg_share, 'rviz', 'roomba_sim.rviz'])],
         parameters=[{'use_sim_time': True}],
-        condition=IfCondition(rviz))
+        condition=IfCondition(rviz)
+        )
 
     return LaunchDescription(declare_args + [
         gazebo,

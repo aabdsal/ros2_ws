@@ -28,7 +28,7 @@
             <geometry>
                 <mesh filename="package://car_controller/meshes/chasis.stl" scale="0.0016 0.0016 0.0016"/>
             </geometry>
-            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${pi/2}"/>
             <material name="red"/>
         </visual>
 
@@ -68,21 +68,21 @@
             <xacro:inercia_inicial mass="0.1"></xacro:inercia_inicial>
         </link>
 
-        <joint name="base_rueda_${nombre}" type="continuous">
+        <joint name="rueda_${nombre}_joint" type="continuous">
             <parent link="base"/>
             <child link="rueda_${nombre}"/>
-            <origin xyz="${dx} ${dy} -0.038" rpy="0.0 ${pi/2} 0.0"/>   
-            <axis xyz="0.0 0.0 1.0"/>
+            <origin xyz="${dx} ${dy} -0.038" rpy="${pi/2} 0.0 0.0"/>   
+            <axis xyz="0.0 0.0 -1.0"/>
         </joint>
 
         
 
     </xacro:macro>
 
-    <xacro:rueda nombre="trasera_izquierda" dx="0.065" dy="0.106" />
-    <xacro:rueda nombre="trasera_derecha" dx="-0.065" dy="0.106" />
-    <xacro:rueda nombre="delantera_izquierda" dx="0.065" dy="-0.116" />
-    <xacro:rueda nombre="delantera_derecha" dx="-0.065" dy="-0.116" />
+    <xacro:rueda nombre="trasera_izquierda" dx="0.116" dy="0.065"/>
+    <xacro:rueda nombre="trasera_derecha" dx="0.116" dy="-0.065"/>
+    <xacro:rueda nombre="delantera_izquierda" dx="-0.106" dy="0.065" />
+    <xacro:rueda nombre="delantera_derecha" dx="-0.106" dy="-0.065" />
 
     <xacro:include filename="$(find car_controller)/urdf/car.ros2_control.xacro"/>
     <xacro:include filename="$(find car_controller)/urdf/car.gazebo.xacro"/>

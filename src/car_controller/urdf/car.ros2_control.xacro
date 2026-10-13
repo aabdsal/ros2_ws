@@ -28,10 +28,10 @@
             </joint>
         </xacro:macro>
 
-        <xacro:rueda nombre="base_rueda_trasera_izquierda"/>
-        <xacro:rueda nombre="base_rueda_trasera_derecha"/>
-        <xacro:rueda nombre="base_rueda_delantera_izquierda"/>
-        <xacro:rueda nombre="base_rueda_delantera_derecha"/>
+        <xacro:rueda nombre="rueda_trasera_izquierda_joint"/>
+        <xacro:rueda nombre="rueda_trasera_derecha_joint"/>
+        <xacro:rueda nombre="rueda_delantera_izquierda_joint"/>
+        <xacro:rueda nombre="rueda_delantera_derecha_joint"/>
 
     </ros2_control>
 </robot>

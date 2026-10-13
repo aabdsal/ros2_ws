@@ -1,17 +1,37 @@
 controller_manager:
   ros__parameters:
-    update_rate: 1000  # Hz
+    update_rate: 50  # Hz
 
+    # Publica /joint_states leyendo las state_interfaces de TODOS los joints.
+    # robot_state_publisher lo usa para calcular los TF de las ruedas y el cepillo.
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-joint_trajectory_controller:
+    diff_drive_controller:
+      type: diff_drive_controller/DiffDriveController
+
+
+diff_drive_controller:
   ros__parameters:
-    type: joint_trajectory_controller/JointTrajectoryController
-    joints:
-      - slider_to_cart
-    command_interfaces:
-      - position
-    state_interfaces:
-      - position
-      - velocity
+    left_wheel_names: ["rueda_trasera_izquierda_joint", "rueda_delantera_izquierda_joint"]
+    right_wheel_names: ["rueda_trasera_derecha_joint", "rueda_delantera_derecha_joint"]
+
+    wheel_separation: 0.13
+    wheel_radius: 0.0294
+
+    odom_frame_id: odom
+    base_frame_id: "base_footprint"
+    enable_odom_tf: true
+    publish_rate: 50.0
+
+    cmd_vel_timeout: 0.5
+
+    linear.x.max_velocity: 0.5
+    linear.x.min_velocity: -0.5
+    linear.x.max_acceleration: 1.0
+    linear.x.max_deceleration: -1.0
+
+    angular.z.max_velocity: 2.5
+    angular.z.min_velocity: -2.5
+    angular.z.max_acceleration: 5.0
+    angular.z.max_deceleration: -5.0

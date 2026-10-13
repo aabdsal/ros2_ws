@@ -10,7 +10,7 @@ def generate_launch_description():
     pkg_share = FindPackageShare('car_controller')
 
     ld.add_action(DeclareLaunchArgument(name='model', default_value='urdf/car.urdf.xacro',
-                                        description='Ruta al URDF relativa al paquete roomba_description'))
+                                        description='Ruta al URDF relativa al paquete car_controller'))
     ld.add_action(DeclareLaunchArgument(name='gui', default_value='true', choices=['true', 'false'],
                                         description='Lanzar joint_state_publisher_gui'))
     ld.add_action(DeclareLaunchArgument(name='rvizconfig',

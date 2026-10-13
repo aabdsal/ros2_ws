@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+  Etiquetas <gazebo>: todo lo que Gazebo necesita y URDF no sabe expresar.
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ======================= TODO 4 ======================= -->
+  <!-- Plugin que arranca un controller_manager DENTRO de Gazebo y le pasa
+       el bloque <ros2_control> y el YAML de controladores.
+         - filename: la librería del sistema, gz_ros2_control-system
+         - name:     la clase, gz_ros2_control::GazeboSimROS2ControlPlugin
+         - <parameters>: ruta ABSOLUTA al YAML de controladores. Usa
+           $(find <paquete>) para que xacro encuentre la carpeta del paquete:
+           el YAML está en config/roomba_controllers.yaml de roomba_gazebo. -->
+  <gazebo>
+    <plugin filename="gz_ros2_control-system"
+            name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>$(find roomba_gazebo)/config/roomba_controllers.yaml</parameters>
+    </plugin>
+  </gazebo>
+
+  <!-- Fricción (mu1, mu2). Las ruedas deben agarrar. -->
+  <gazebo reference="left_wheel_link">
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+  </gazebo>
+  <gazebo reference="right_wheel_link">
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+  </gazebo>
+
+  <!-- ======================= TODO 5 ======================= -->
+  <!-- La rueda loca (caster_link) es una esfera FIJA: no gira. ¿Qué
+       fricción le pondrías para que no frene al robot? Añade su bloque
+       <gazebo reference="..."> igual que los de las ruedas. -->
+  <gazebo reference="caster_link">
+    <mu1>0.0001</mu1>
+    <mu2>0.0001</mu2>
+  </gazebo>
+</robot>

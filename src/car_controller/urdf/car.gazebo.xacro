@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <gazebo>
+        <plugin filename="gz_ros2_control-system" 
+                name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+            <parameters>$(find car_controller)/config/car_controller.yaml</parameters>
+        </plugin>
+    </gazebo>
+
+    <xacro:macro name="friccion" params="nombre">
+        <gazebo reference="${nombre}">
+            <mu1>1.0</mu1>
+            <mu2>1.0</mu2>
+        </gazebo>
+    </xacro:macro>
+    
+    <xacro:friccion nombre="rueda_trasera_izquierda"/>
+    <xacro:friccion nombre="rueda_trasera_derecha"/>
+    <xacro:friccion nombre="rueda_delantera_izquierda"/>
+    <xacro:friccion nombre="rueda_delantera_derecha"/>
+
+</robot>

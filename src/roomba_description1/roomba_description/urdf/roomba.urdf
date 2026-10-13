@@ -1,0 +1,80 @@
+<?xml version="1.0"?> 
+
+<robot name="TARS">
+    <material name="black">
+        <color rgba="1.0 1.0 1.0 1.0"/>
+    </material>
+    <material name="green">
+        <color rgba="0.1 0.8 0.3 1.0"/>
+    </material>
+
+    <link name="base_footprint"/>
+    <link name="base">
+        <visual>
+            <geometry>
+                <cylinder radius="0.2" length="0.06"/>
+            </geometry>
+            <material name="green"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/> 
+        </visual>
+        
+        <collision>
+            <geometry>
+                <cylinder radius="0.2" length="0.06"/>        
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        </collision>
+    </link>
+
+    <link name="rueda1">
+        <visual>
+            <geometry>
+                <cylinder radius="0.03" length="0.06"/>
+            </geometry>
+            <material name="black"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 1.5704 0.0"/> 
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.03" length="0.06"/>        
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 1.5704 0.0"/>
+        </collision>
+    </link>
+
+    <link name="rueda2">
+        <visual>
+            <geometry>
+                <cylinder radius="0.03" length="0.06"/>
+            </geometry>
+            <material name="black"/>
+            <origin xyz="0.0 0.0 0.0" rpy="1.5704 0.0 0.0"/> 
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.03" length="0.06"/>        
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="1.5704 0.0 0.0"/>
+        </collision>
+    </link>
+
+    <joint name="base_joint" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="base"/>
+        <origin xyz="0.0 0.0 0.03" rpy="0.0 0.0 0.0"/>
+    </joint>
+    
+    <joint name="rueda1_joint" type="continuous">
+        <parent link="base"/>
+        <child link="rueda1"/>
+        <origin xyz="-0.1 0.0 -0.03" rpy="0.0 0.0 0.0"/>
+        <axis xyz="0 1 0"/>
+    </joint>
+    <joint name="rueda2_joint" type="continuous">
+        <parent link="base"/>
+        <child link="rueda2"/>
+        <origin xyz="0.1 0.0 -0.03" rpy="0.0 0.0 0.0"/>
+        <axis xyz="0 1 0"/>
+    </joint>
+
+</robot>

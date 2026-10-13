@@ -1,0 +1,77 @@
+# Configuración de ros2_control para la Roomba.
+#
+# 1) controller_manager: frecuencia del bucle de control y QUÉ controladores
+#    existen (nombre -> tipo). Cargarlos/activarlos lo hacen los spawners del
+#    launch.
+# 2) Una sección por controlador con sus parámetros.
+#
+# Pista: los tipos tienen la forma <paquete>/<Clase>. Puedes ver los que hay
+# instalados con:  ros2 control list_controller_types
+# (con la simulación en marcha).
+
+controller_manager:
+  ros__parameters:
+    update_rate: 50  # Hz
+
+    # Publica /joint_states leyendo las state_interfaces de TODOS los joints.
+    # robot_state_publisher lo usa para calcular los TF de las ruedas y el cepillo.
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    # ======================= TODO 6 =======================
+    # Tipo del controlador de tracción diferencial. Convierte velocidad del
+    # robot (m/s, rad/s) en velocidad de cada rueda y calcula la odometría.
+    # Paquete: diff_drive_controller. Clase: DiffDriveController.
+    diff_drive_controller:
+      type: diff_drive_controller/DiffDriveController
+
+    # ======================= TODO 7 =======================
+    # Tipo del controlador del cepillo: reenvía tal cual un vector de
+    # VELOCIDADES a un grupo de joints.
+    # Paquete: velocity_controllers. Clase: JointGroupVelocityController.
+    side_brush_controller:
+      type: velocity_controllers/JointGroupVelocityController
+
+
+diff_drive_controller:
+  ros__parameters:
+    left_wheel_names: ["left_wheel_joint"]
+    right_wheel_names: ["right_wheel_joint"]
+
+    # ======================= TODO 8 =======================
+    # Medidas del robot, en metros. Sácalas del URDF:
+    #   - wheel_separation: distancia entre el centro de las dos ruedas
+    #     (mira el <origin> de left_wheel_joint y right_wheel_joint).
+    #   - wheel_radius: radio de la rueda.
+    # Si te equivocas, el robot se moverá, pero la odometría mentirá.
+    wheel_separation: 0.235
+    wheel_radius: 0.036
+
+    # ======================= TODO 9 =======================
+    # Frame del robot al que se refiere la odometría (odom -> ???).
+    # Es el link raíz del URDF, el que está en el suelo.
+    odom_frame_id: odom
+    base_frame_id: "base_footprint"
+    enable_odom_tf: true
+    publish_rate: 50.0
+
+    # Si en 0.5 s no llega ningún cmd_vel, el robot se para (seguridad).
+    cmd_vel_timeout: 0.5
+
+    # Límites parecidos a los de una Roomba real.
+    linear.x.max_velocity: 0.5
+    linear.x.min_velocity: -0.5
+    linear.x.max_acceleration: 1.0
+    linear.x.min_acceleration: -1.0
+    angular.z.max_velocity: 2.5
+    angular.z.min_velocity: -2.5
+    angular.z.max_acceleration: 5.0
+    angular.z.min_acceleration: -5.0
+
+
+side_brush_controller:
+  ros__parameters:
+    # ======================= TODO 10 =======================
+    # Lista de joints que mueve este controlador (solo uno).
+    joints:
+      - "side_brush_joint"

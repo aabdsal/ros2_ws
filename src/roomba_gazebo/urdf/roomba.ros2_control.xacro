@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+
+<!-- ======================= OBLIGATORIO =======================
+  Leer la documentación de ros2_control:
+  Hardware Interfaces Types: https://control.ros.org/jazzy/doc/ros2_control/hardware_interface/doc/hardware_interface_types_userdoc.html
+  Contollers: https://control.ros.org/jazzy/doc/ros2_controllers/doc/controllers_index.html#
+-->
+<!--
+  Bloque <ros2_control>: le dice al controller_manager QUÉ hardware hay y
+  QUÉ se puede mandar/leer de cada joint.
+
+    - <hardware><plugin>: el "driver". En un robot real sería el driver de
+      los motores; en simulación es el de Gazebo.
+    - <command_interface>: lo que el controlador ESCRIBE (aquí velocidad).
+    - <state_interface>:   lo que el controlador LEE (posición y velocidad).
+
+  Si mañana tuviéramos la Roomba real, solo cambiaría el <plugin>: los
+  controladores y el teleop serían exactamente los mismos.
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <ros2_control name="RoombaGazeboSystem" type="system">
+    <hardware>
+      <!-- ======================= TODO 1 ======================= -->
+      <!-- Nombre del plugin de hardware que simula los motores en Gazebo.
+           Formato: <paquete>/<Clase>. El paquete es gz_ros2_control y la
+           clase se llama GazeboSimSystem. -->
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+
+    <!-- Ruedas: el diff_drive_controller les manda velocidad (rad/s) y
+         lee posición y velocidad para calcular la odometría.
+         0.5 m/s / 0.036 m ≈ 14 rad/s: dejamos margen hasta 15. -->
+    <joint name="left_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-15</param>
+        <param name="max">15</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <!-- ======================= TODO 2 ======================= -->
+    <!-- Añade el <joint> de la rueda DERECHA. Tiene que ser igual que el
+         de la izquierda: el diff_drive_controller trata las dos ruedas
+         de la misma forma. Revisa el nombre del joint en roomba.urdf.xacro. -->
+    <joint name="right_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-15</param>
+        <param name="max">15</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <!-- ======================= TODO 3 ======================= -->
+    <!-- Añade el <joint> del CEPILLO LATERAL (side_brush_joint):
+         - Lo vamos a mover por VELOCIDAD (entre -20 y 20 rad/s).
+         - Queremos leer su posición y su velocidad.
+         Si no lo declaras aquí, ningún controlador podrá moverlo. -->
+    <joint name="side_brush_joint">
+      <command_interface name="velocity">
+        <param name="min">-20</param>
+        <param name="max">20</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
+
+</robot>

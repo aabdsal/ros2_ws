@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<!-- 
+
+ Esto declara que elementos puede controlar ros2_controol
+ y que informacion puede leer y escribir de ellos, 
+ no es ni el controlador ni decide como se mueve el coche
+
+ -->
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <ros2_control name="GazeboSimSystem" type="system">
+
+        <hardware>
+            <plugin>
+                gz_ros2_control/GazeboSimSystem
+            </plugin>
+        </hardware>
+
+        <xacro:macro name="rueda" params="nombre">            
+            <joint name="${nombre}">
+                <command_interface name="velocity"> <!-- Escribe velocidad-->
+                    <param name="min">-15</param>
+                    <param name="max">15</param>
+                </command_interface>
+                <state_interface name="position"/> <!-- Lee posicion y velocidad-->
+                <state_interface name="velocity"/>
+            </joint>
+        </xacro:macro>
+
+        <xacro:rueda nombre="base_rueda_trasera_izquierda"/>
+        <xacro:rueda nombre="base_rueda_trasera_derecha"/>
+        <xacro:rueda nombre="base_rueda_delantera_izquierda"/>
+        <xacro:rueda nombre="base_rueda_delantera_derecha"/>
+
+    </ros2_control>
+</robot>

@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<!--
+  Salón de 5 x 4 m con un sofá y una mesa baja para que la Roomba tenga
+  con qué chocar. Mundo en formato SDF (el nativo de Gazebo).
+-->
+<sdf version="1.9">
+  <world name="salon">
+
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <!-- Si un mundo declara plugins, Gazebo NO carga los de por defecto:
+         hay que listar los mínimos a mano. -->
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+
+    <gui fullscreen="0">
+      <camera name="user_camera">
+        <pose>-3.0 -3.0 3.0 0 0.6 0.785</pose>
+      </camera>
+    </gui>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <!-- Suelo -->
+    <model name="suelo">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>20 20</size></plane></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>20 20</size></plane></geometry>
+          <material>
+            <ambient>0.60 0.45 0.30 1</ambient>
+            <diffuse>0.60 0.45 0.30 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Paredes: 5 m (X) x 4 m (Y), 0.1 m de grosor y 0.5 m de alto -->
+    <model name="paredes">
+      <static>true</static>
+      <link name="link">
+        <collision name="norte_c"><pose>0 2.05 0.25 0 0 0</pose><geometry><box><size>5.2 0.1 0.5</size></box></geometry></collision>
+        <visual name="norte_v"><pose>0 2.05 0.25 0 0 0</pose><geometry><box><size>5.2 0.1 0.5</size></box></geometry>
+          <material><ambient>0.9 0.9 0.85 1</ambient><diffuse>0.9 0.9 0.85 1</diffuse></material></visual>
+        <collision name="sur_c"><pose>0 -2.05 0.25 0 0 0</pose><geometry><box><size>5.2 0.1 0.5</size></box></geometry></collision>
+        <visual name="sur_v"><pose>0 -2.05 0.25 0 0 0</pose><geometry><box><size>5.2 0.1 0.5</size></box></geometry>
+          <material><ambient>0.9 0.9 0.85 1</ambient><diffuse>0.9 0.9 0.85 1</diffuse></material></visual>
+        <collision name="este_c"><pose>2.55 0 0.25 0 0 0</pose><geometry><box><size>0.1 4.0 0.5</size></box></geometry></collision>
+        <visual name="este_v"><pose>2.55 0 0.25 0 0 0</pose><geometry><box><size>0.1 4.0 0.5</size></box></geometry>
+          <material><ambient>0.9 0.9 0.85 1</ambient><diffuse>0.9 0.9 0.85 1</diffuse></material></visual>
+        <collision name="oeste_c"><pose>-2.55 0 0.25 0 0 0</pose><geometry><box><size>0.1 4.0 0.5</size></box></geometry></collision>
+        <visual name="oeste_v"><pose>-2.55 0 0.25 0 0 0</pose><geometry><box><size>0.1 4.0 0.5</size></box></geometry>
+          <material><ambient>0.9 0.9 0.85 1</ambient><diffuse>0.9 0.9 0.85 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- Sofá pegado a la pared norte -->
+    <model name="sofa">
+      <static>true</static>
+      <pose>0.5 1.55 0.2 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>2.0 0.8 0.4</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>2.0 0.8 0.4</size></box></geometry>
+          <material><ambient>0.2 0.3 0.6 1</ambient><diffuse>0.2 0.3 0.6 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- Mesa baja: tablero alto y cuatro patas. La Roomba cabe por debajo. -->
+    <model name="mesa">
+      <static>true</static>
+      <pose>1.2 -0.8 0 0 0 0</pose>
+      <link name="link">
+        <visual name="tablero"><pose>0 0 0.40 0 0 0</pose><geometry><box><size>1.0 0.6 0.04</size></box></geometry>
+          <material><ambient>0.45 0.30 0.15 1</ambient><diffuse>0.45 0.30 0.15 1</diffuse></material></visual>
+        <collision name="tablero_c"><pose>0 0 0.40 0 0 0</pose><geometry><box><size>1.0 0.6 0.04</size></box></geometry></collision>
+        <collision name="pata1_c"><pose> 0.45  0.25 0.19 0 0 0</pose><geometry><cylinder><radius>0.025</radius><length>0.38</length></cylinder></geometry></collision>
+        <visual name="pata1"><pose> 0.45  0.25 0.19 0 0 0</pose><geometry><cylinder><radius>0.025</radius><length>0.38</length></cylinder></geometry></visual>
+        <collision name="pata2_c"><pose>-0.45  0.25 0.19 0 0 0</pose><geometry><cylinder><radius>0.025</radius><length>0.38</length></cylinder></geometry></collision>
+        <visual name="pata2"><pose>-0.45  0.25 0.19 0 0 0</pose><geometry><cylinder><radius>0.025</radius><length>0.38</length></cylinder></geometry></visual>
+        <collision name="pata3_c"><pose> 0.45 -0.25 0.19 0 0 0</pose><geometry><cylinder><radius>0.025</radius><length>0.38</length></cylinder></geometry></collision>
+        <visual name="pata3"><pose> 0.45 -0.25 0.19 0 0 0</pose><geometry><cylinder><radius>0.025</radius><length>0.38</length></cylinder></geometry></visual>
+        <collision name="pata4_c"><pose>-0.45 -0.25 0.19 0 0 0</pose><geometry><cylinder><radius>0.025</radius><length>0.38</length></cylinder></geometry></collision>
+        <visual name="pata4"><pose>-0.45 -0.25 0.19 0 0 0</pose><geometry><cylinder><radius>0.025</radius><length>0.38</length></cylinder></geometry></visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

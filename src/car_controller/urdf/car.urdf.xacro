@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+
+<robot name="coche" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <material name="red">
+        <color rgba="1.0 0.0 0.0 1.0"/>
+    </material>
+
+    <material name="black">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+    </material>
+
+    <material name="gray">
+        <color rgba="0.33 0.309 0.30588 1.0"/>
+    </material>
+
+    <xacro:macro name="inercia_inicial" params="mass">
+        <inertial>
+            <mass value="${mass}" />
+            <inertia ixx="1e-3" ixy="0.0" ixz="0.0" iyy="1e-3" iyz="0.0" izz="1e-3" />
+        </inertial>
+    </xacro:macro>
+
+    <link name="base_footprint"/>
+        
+    <link name="base">
+        <visual>
+            <geometry>
+                <mesh filename="package://car_controller/meshes/chasis.stl" scale="0.0016 0.0016 0.0016"/>
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <material name="red"/>
+        </visual>
+
+        <collision>
+            <geometry>
+                <box size="0.17 0.33 0.10"/>
+            </geometry>
+        </collision>
+
+        <xacro:inercia_inicial mass="1.0"/>
+
+    </link>
+
+    <joint name="base2base" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="base"/>
+        <origin xyz="0.0 0.0 0.06" rpy="0.0 0.0 0.0"/>  
+    </joint>
+
+
+    <xacro:macro name="rueda" params="nombre dx dy"> 
+        <link name="rueda_${nombre}">
+            <visual>
+                <geometry>
+                    <mesh filename="package://car_controller/meshes/rueda.stl" scale="0.001 0.001 0.001"/>
+                </geometry>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <material name="gray"/>
+            </visual>
+
+            <collision>
+                <geometry>
+                    <cylinder radius="0.03" length="0.03"/>
+                </geometry>
+            </collision>
+
+            <xacro:inercia_inicial mass="0.1"></xacro:inercia_inicial>
+        </link>
+
+        <joint name="base_rueda_${nombre}" type="continuous">
+            <parent link="base"/>
+            <child link="rueda_${nombre}"/>
+            <origin xyz="${dx} ${dy} -0.038" rpy="0.0 ${pi/2} 0.0"/>   
+            <axis xyz="0.0 0.0 1.0"/>
+        </joint>
+
+        
+
+    </xacro:macro>
+
+    <xacro:rueda nombre="trasera_izquierda" dx="0.065" dy="0.106" />
+    <xacro:rueda nombre="trasera_derecha" dx="-0.065" dy="0.106" />
+    <xacro:rueda nombre="delantera_izquierda" dx="0.065" dy="-0.116" />
+    <xacro:rueda nombre="delantera_derecha" dx="-0.065" dy="-0.116" />
+
+    <xacro:include filename="$(find car_controller)/urdf/car.ros2_control.xacro"/>
+    <xacro:include filename="$(find car_controller)/urdf/car.gazebo.xacro"/>
+
+</robot>    

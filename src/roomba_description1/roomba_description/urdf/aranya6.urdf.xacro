@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+
+<robot name="aranya6" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <material name="red">
+        <color rgba="1.0 0.0 0.0 1.0"/>
+    </material>
+
+    <material name="black">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+    </material>
+
+    <material name="gray">
+        <color rgba="0.33 0.309 0.30588 1.0"/>
+    </material>
+
+    <!--copiat del tutorial-->
+  <xacro:macro name="inercia_inicial" params="mass">
+    <inertial>
+      <mass value="${mass}" />
+      <inertia ixx="1e-3" ixy="0.0" ixz="0.0" iyy="1e-3" iyz="0.0" izz="1e-3" />
+    </inertial>
+  </xacro:macro>
+
+    <link name="base_footprint"/>
+        
+    <link name="base">
+        <visual>
+            <geometry>
+                <box size="0.15 0.25 0.05"/> <!--Asi ni ha que especificar volumen-->
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <material name="red"/>
+        </visual>
+    </link>
+
+    <joint name="base_joint" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="base"/>
+        <origin xyz="0.0 0.0 0.05" rpy="0.0 0.0 0.0"/>
+    </joint>
+
+    <xacro:macro name="articulacion1" params="nombre dx dy neg"> 
+        <link name="articulacion1_${nombre}">
+            <visual>
+                <geometry>
+                    <box size="0.025 0.03 0.05"/>
+                </geometry>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <material name="black"/>
+            </visual>
+
+            <collision>
+                <geometry>
+                    <box size="0.025 0.03 0.05"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <joint name="base_pata_${nombre}" type="revolute">
+            <parent link="base"/>
+            <child link="articulacion1_${nombre}"/>
+            <origin xyz="${dx} ${dy} 0.0" rpy="0.0 ${neg*pi/4} 0.0"/>   
+            
+            <axis xyz="0.0 1.0 0.0"/>
+            <limit lower="${-pi/4}" upper="${pi/4}" effort="10.0" velocity="1.0"/>
+        </joint>
+
+    </xacro:macro>
+
+    <xacro:articulacion1 nombre="1" dx="0.09" dy="0.09" neg="-1"/>
+    <xacro:articulacion1 nombre="2" dx="-0.09" dy="0.09" neg="1"/>
+    <xacro:articulacion1 nombre="3" dx="0.09" dy="-0.09" neg="-1"/>
+    <xacro:articulacion1 nombre="4" dx="-0.09" dy="-0.09" neg="1"/>
+    <xacro:articulacion1 nombre="5" dx="0.09" dy="0.0" neg="-1"/>
+    <xacro:articulacion1 nombre="6" dx="-0.09" dy="0.0" neg="1"/>
+
+
+    <xacro:macro name="articulacion2" params="nombre neg"> 
+        <link name="articulacion2_${nombre}">
+            <visual>
+                <geometry>
+                    <box size="0.015 0.02 0.035"/>
+                </geometry>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <material name="gray"/>
+            </visual>
+
+            <collision>
+                <geometry>
+                    <box size="0.015 0.02 0.035"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <joint name="artc1_a_artc2_${nombre}" type="revolute">
+            <parent link="articulacion1_${nombre}"/>
+            <child link="articulacion2_${nombre}"/>
+            <origin xyz="${neg*-0.012} 0.0 -0.03" rpy="0.0 ${neg*pi/8} 0.0"/>
+
+            <axis xyz="0.0 1.0 0.0"/>
+            <limit lower="${-pi/4}" upper="${pi/4}" effort="10.0" velocity="1.0"/>        
+        </joint>
+
+    </xacro:macro>
+
+    <xacro:articulacion2 nombre="1" neg="1"/>
+    <xacro:articulacion2 nombre="2" neg="-1"/>
+    <xacro:articulacion2 nombre="3" neg="1"/>
+    <xacro:articulacion2 nombre="4" neg="-1"/>
+    <xacro:articulacion2 nombre="5" neg="1"/>
+    <xacro:articulacion2 nombre="6" neg="-1"/>
+
+    <xacro:macro name="pie" params="nombre"> 
+        <link name="pie_${nombre}">
+            <visual>
+                <geometry>
+                    <sphere radius="0.015"/>
+                </geometry>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <material name="gray"/>
+            </visual>
+
+            <collision>
+                <geometry>
+                    <sphere radius="0.02"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <joint name="artc2_a_pie_${nombre}" type="fixed">
+            <parent link="articulacion2_${nombre}"/>
+            <child link="pie_${nombre}"/>
+            <origin xyz="0.0 0.0 -0.03" rpy="0.0 0.0 0.0"/>        
+        </joint>
+
+    </xacro:macro>
+
+    <xacro:pie nombre="1" />
+    <xacro:pie nombre="2" />
+    <xacro:pie nombre="3" />
+    <xacro:pie nombre="4" />
+    <xacro:pie nombre="5" />
+    <xacro:pie nombre="6" />
+
+<!--la x es el eix roig i la y es el eix vert
+  distancies en metros y angles en radians -->
+</robot>

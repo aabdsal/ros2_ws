@@ -4,3 +4,5 @@ log/
 install/
 *.pdf
 *gv
+src/urdf_launch
+src/urdf_tutorial
